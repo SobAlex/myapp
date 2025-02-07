@@ -1,0 +1,75 @@
+<x-app-layout>
+
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Categories') }}
+        </h2>
+    </x-slot>
+
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+
+                <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+
+                    @if (count($categories) === 0)
+                        <p class="px-7 mt-2 font-bold">Категорий нет</p>
+                    @endif
+
+                    @can('only super-admins can see this section')
+                        <a class="inline-flex items-center px-5 py-2.5 mt-4 mb-4 ml-4 text-sm font-medium text-center text-white bg-primary-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800"
+                            href="{{ route('admin.categories.create') }}">Create category</a>
+                    @endcan
+
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">
+                                    id
+                                </th>
+
+                                <th scope="col" class="px-6 py-3">
+                                    Category
+                                </th>
+
+                                <th scope="col" class="px-6 py-3">
+                                    @can('only super-admins can see this section')
+                                        Action
+                                    @endcan
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($categories as $category)
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                                    <th scope="row"
+                                        class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                        {{ $category->id }}
+                                    </th>
+
+                                    <td class="px-6 py-4">
+                                        {{ $category->title }}
+                                    </td>
+
+                                    <td class="px-6 py-4">
+                                        @can('only super-admins can see this section')
+                                            <a href="{{ route('admin.categories.edit', $category) }}"
+                                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-green-800 hover:bg-green-800 mb-5">Edit</a>
+
+                                            <form method="POST" action="{{ route('admin.categories.delete', $category) }}">
+                                                @csrf
+                                                @method('delete')
+                                                <button type="submit" class="text-red-700">Delete</button>
+                                            </form>
+                                        @endcan
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</x-app-layout>

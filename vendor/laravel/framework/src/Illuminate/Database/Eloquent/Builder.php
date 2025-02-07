@@ -205,7 +205,7 @@ class Builder implements BuilderContract
      */
     public function withoutGlobalScope($scope)
     {
-        if (! is_string($scope)) {
+        if (!is_string($scope)) {
             $scope = get_class($scope);
         }
 
@@ -224,7 +224,7 @@ class Builder implements BuilderContract
      */
     public function withoutGlobalScopes(?array $scopes = null)
     {
-        if (! is_array($scopes)) {
+        if (!is_array($scopes)) {
             $scopes = array_keys($this->scopes);
         }
 
@@ -350,7 +350,9 @@ class Builder implements BuilderContract
     public function orWhere($column, $operator = null, $value = null)
     {
         [$value, $operator] = $this->query->prepareValueAndOperator(
-            $value, $operator, func_num_args() === 2
+            $value,
+            $operator,
+            func_num_args() === 2
         );
 
         return $this->where($column, $operator, $value, 'or');
@@ -367,7 +369,7 @@ class Builder implements BuilderContract
      */
     public function whereNot($column, $operator = null, $value = null, $boolean = 'and')
     {
-        return $this->where($column, $operator, $value, $boolean.' not');
+        return $this->where($column, $operator, $value, $boolean . ' not');
     }
 
     /**
@@ -504,7 +506,8 @@ class Builder implements BuilderContract
         if (is_array($id)) {
             if (count($result) !== count(array_unique($id))) {
                 throw (new ModelNotFoundException)->setModel(
-                    get_class($this->model), array_diff($id, $result->modelKeys())
+                    get_class($this->model),
+                    array_diff($id, $result->modelKeys())
                 );
             }
 
@@ -513,7 +516,8 @@ class Builder implements BuilderContract
 
         if (is_null($result)) {
             throw (new ModelNotFoundException)->setModel(
-                get_class($this->model), $id
+                get_class($this->model),
+                $id
             );
         }
 
@@ -529,7 +533,7 @@ class Builder implements BuilderContract
      */
     public function findOrNew($id, $columns = ['*'])
     {
-        if (! is_null($model = $this->find($id, $columns))) {
+        if (!is_null($model = $this->find($id, $columns))) {
             return $model;
         }
 
@@ -558,7 +562,7 @@ class Builder implements BuilderContract
             $columns = ['*'];
         }
 
-        if (! is_null($model = $this->find($id, $columns))) {
+        if (!is_null($model = $this->find($id, $columns))) {
             return $model;
         }
 
@@ -574,7 +578,7 @@ class Builder implements BuilderContract
      */
     public function firstOrNew(array $attributes = [], array $values = [])
     {
-        if (! is_null($instance = $this->where($attributes)->first())) {
+        if (!is_null($instance = $this->where($attributes)->first())) {
             return $instance;
         }
 
@@ -590,7 +594,7 @@ class Builder implements BuilderContract
      */
     public function firstOrCreate(array $attributes = [], array $values = [])
     {
-        if (! is_null($instance = (clone $this)->where($attributes)->first())) {
+        if (!is_null($instance = (clone $this)->where($attributes)->first())) {
             return $instance;
         }
 
@@ -607,7 +611,7 @@ class Builder implements BuilderContract
     public function createOrFirst(array $attributes = [], array $values = [])
     {
         try {
-            return $this->withSavepointIfNeeded(fn () => $this->create(array_merge($attributes, $values)));
+            return $this->withSavepointIfNeeded(fn() => $this->create(array_merge($attributes, $values)));
         } catch (UniqueConstraintViolationException $e) {
             return $this->useWritePdo()->where($attributes)->first() ?? throw $e;
         }
@@ -623,7 +627,7 @@ class Builder implements BuilderContract
     public function updateOrCreate(array $attributes, array $values = [])
     {
         return tap($this->firstOrCreate($attributes, $values), function ($instance) use ($values) {
-            if (! $instance->wasRecentlyCreated) {
+            if (!$instance->wasRecentlyCreated) {
                 $instance->fill($values)->save();
             }
         });
@@ -642,7 +646,7 @@ class Builder implements BuilderContract
     public function incrementOrCreate(array $attributes, string $column = 'count', $default = 1, $step = 1, array $extra = [])
     {
         return tap($this->firstOrCreate($attributes, [$column => $default]), function ($instance) use ($column, $step, $extra) {
-            if (! $instance->wasRecentlyCreated) {
+            if (!$instance->wasRecentlyCreated) {
                 $instance->increment($column, $step, $extra);
             }
         });
@@ -658,7 +662,7 @@ class Builder implements BuilderContract
      */
     public function firstOrFail($columns = ['*'])
     {
-        if (! is_null($model = $this->first($columns))) {
+        if (!is_null($model = $this->first($columns))) {
             return $model;
         }
 
@@ -682,7 +686,7 @@ class Builder implements BuilderContract
             $columns = ['*'];
         }
 
-        if (! is_null($model = $this->first($columns))) {
+        if (!is_null($model = $this->first($columns))) {
             return $model;
         }
 
@@ -800,7 +804,7 @@ class Builder implements BuilderContract
             // For nested eager loads we'll skip loading them here and they will be set as an
             // eager load on the query to retrieve the relation so that they will be eager
             // loaded on that query, because that is where they get hydrated as models.
-            if (! str_contains($name, '.')) {
+            if (!str_contains($name, '.')) {
                 $models = $this->eagerLoadRelation($models, $name, $constraints);
             }
         }
@@ -832,7 +836,8 @@ class Builder implements BuilderContract
         // of models which have been eagerly hydrated and are readied for return.
         return $relation->match(
             $relation->initRelation($models, $name),
-            $relation->getEager(), $name
+            $relation->getEager(),
+            $name
         );
     }
 
@@ -882,7 +887,7 @@ class Builder implements BuilderContract
         // that start with the given top relations and adds them to our arrays.
         foreach ($this->eagerLoad as $name => $constraints) {
             if ($this->isNestedUnder($relation, $name)) {
-                $nested[substr($name, strlen($relation.'.'))] = $constraints;
+                $nested[substr($name, strlen($relation . '.'))] = $constraints;
             }
         }
 
@@ -898,7 +903,7 @@ class Builder implements BuilderContract
      */
     protected function isNestedUnder($relation, $name)
     {
-        return str_contains($name, '.') && str_starts_with($name, $relation.'.');
+        return str_contains($name, '.') && str_starts_with($name, $relation . '.');
     }
 
     /**
@@ -940,7 +945,7 @@ class Builder implements BuilderContract
             $model = $this->newModelInstance()->newFromBuilder($record);
 
             return $this->applyAfterQueryCallbacks($this->newModelInstance()->newCollection([$model]))->first();
-        })->reject(fn ($model) => is_null($model));
+        })->reject(fn($model) => is_null($model));
     }
 
     /**
@@ -973,9 +978,11 @@ class Builder implements BuilderContract
         // If the model has a mutator for the requested column, we will spin through
         // the results and mutate the values so that the mutated version of these
         // columns are returned as you would expect from these Eloquent models.
-        if (! $this->model->hasAnyGetMutator($column) &&
-            ! $this->model->hasCast($column) &&
-            ! in_array($column, $this->model->getDates())) {
+        if (
+            !$this->model->hasAnyGetMutator($column) &&
+            !$this->model->hasCast($column) &&
+            !in_array($column, $this->model->getDates())
+        ) {
             return $this->applyAfterQueryCallbacks($results);
         }
 
@@ -1074,7 +1081,7 @@ class Builder implements BuilderContract
         }
 
         $reverseDirection = function ($order) {
-            if (! isset($order['direction'])) {
+            if (!isset($order['direction'])) {
                 return $order;
             }
 
@@ -1088,10 +1095,10 @@ class Builder implements BuilderContract
             $this->query->unionOrders = (new BaseCollection($this->query->unionOrders))->map($reverseDirection)->toArray();
         }
 
-        $orders = ! empty($this->query->unionOrders) ? $this->query->unionOrders : $this->query->orders;
+        $orders = !empty($this->query->unionOrders) ? $this->query->unionOrders : $this->query->orders;
 
         return (new BaseCollection($orders))
-            ->filter(fn ($order) => Arr::has($order, 'direction'))
+            ->filter(fn($order) => Arr::has($order, 'direction'))
             ->values();
     }
 
@@ -1116,7 +1123,7 @@ class Builder implements BuilderContract
      */
     public function createQuietly(array $attributes = [])
     {
-        return Model::withoutEvents(fn () => $this->create($attributes));
+        return Model::withoutEvents(fn() => $this->create($attributes));
     }
 
     /**
@@ -1140,7 +1147,7 @@ class Builder implements BuilderContract
      */
     public function forceCreateQuietly(array $attributes = [])
     {
-        return Model::withoutEvents(fn () => $this->forceCreate($attributes));
+        return Model::withoutEvents(fn() => $this->forceCreate($attributes));
     }
 
     /**
@@ -1168,7 +1175,7 @@ class Builder implements BuilderContract
             return 0;
         }
 
-        if (! is_array(reset($values))) {
+        if (!is_array(reset($values))) {
             $values = [$values];
         }
 
@@ -1199,7 +1206,7 @@ class Builder implements BuilderContract
 
         $column = $this->model->getUpdatedAtColumn();
 
-        if (! $this->model->usesTimestamps() || is_null($column)) {
+        if (!$this->model->usesTimestamps() || is_null($column)) {
             return false;
         }
 
@@ -1217,7 +1224,9 @@ class Builder implements BuilderContract
     public function increment($column, $amount = 1, array $extra = [])
     {
         return $this->toBase()->increment(
-            $column, $amount, $this->addUpdatedAtColumn($extra)
+            $column,
+            $amount,
+            $this->addUpdatedAtColumn($extra)
         );
     }
 
@@ -1232,7 +1241,9 @@ class Builder implements BuilderContract
     public function decrement($column, $amount = 1, array $extra = [])
     {
         return $this->toBase()->decrement(
-            $column, $amount, $this->addUpdatedAtColumn($extra)
+            $column,
+            $amount,
+            $this->addUpdatedAtColumn($extra)
         );
     }
 
@@ -1244,14 +1255,16 @@ class Builder implements BuilderContract
      */
     protected function addUpdatedAtColumn(array $values)
     {
-        if (! $this->model->usesTimestamps() ||
-            is_null($this->model->getUpdatedAtColumn())) {
+        if (
+            !$this->model->usesTimestamps() ||
+            is_null($this->model->getUpdatedAtColumn())
+        ) {
             return $values;
         }
 
         $column = $this->model->getUpdatedAtColumn();
 
-        if (! array_key_exists($column, $values)) {
+        if (!array_key_exists($column, $values)) {
             $timestamp = $this->model->freshTimestampString();
 
             if (
@@ -1269,7 +1282,7 @@ class Builder implements BuilderContract
 
         $segments = preg_split('/\s+as\s+/i', $this->query->from);
 
-        $qualifiedColumn = end($segments).'.'.$column;
+        $qualifiedColumn = end($segments) . '.' . $column;
 
         $values[$qualifiedColumn] = Arr::get($values, $qualifiedColumn, $values[$column]);
 
@@ -1286,13 +1299,13 @@ class Builder implements BuilderContract
      */
     protected function addUniqueIdsToUpsertValues(array $values)
     {
-        if (! $this->model->usesUniqueIds()) {
+        if (!$this->model->usesUniqueIds()) {
             return $values;
         }
 
         foreach ($this->model->uniqueIds() as $uniqueIdAttribute) {
             foreach ($values as &$row) {
-                if (! array_key_exists($uniqueIdAttribute, $row)) {
+                if (!array_key_exists($uniqueIdAttribute, $row)) {
                     $row = array_merge([$uniqueIdAttribute => $this->model->newUniqueId()], $row);
                 }
             }
@@ -1309,7 +1322,7 @@ class Builder implements BuilderContract
      */
     protected function addTimestampsToUpsertValues(array $values)
     {
-        if (! $this->model->usesTimestamps()) {
+        if (!$this->model->usesTimestamps()) {
             return $values;
         }
 
@@ -1337,15 +1350,17 @@ class Builder implements BuilderContract
      */
     protected function addUpdatedAtToUpsertColumns(array $update)
     {
-        if (! $this->model->usesTimestamps()) {
+        if (!$this->model->usesTimestamps()) {
             return $update;
         }
 
         $column = $this->model->getUpdatedAtColumn();
 
-        if (! is_null($column) &&
-            ! array_key_exists($column, $update) &&
-            ! in_array($column, $update)) {
+        if (
+            !is_null($column) &&
+            !array_key_exists($column, $update) &&
+            !in_array($column, $update)
+        ) {
             $update[] = $column;
         }
 
@@ -1422,7 +1437,8 @@ class Builder implements BuilderContract
             // care of grouping the "wheres" properly so the logical order doesn't get
             // messed up when adding scopes. Then we'll return back out the builder.
             $builder = $builder->callNamedScope(
-                $scope, Arr::wrap($parameters)
+                $scope,
+                Arr::wrap($parameters)
             );
         }
 
@@ -1436,14 +1452,14 @@ class Builder implements BuilderContract
      */
     public function applyScopes()
     {
-        if (! $this->scopes) {
+        if (!$this->scopes) {
             return $this;
         }
 
         $builder = clone $this;
 
         foreach ($this->scopes as $identifier => $scope) {
-            if (! isset($builder->scopes[$identifier])) {
+            if (!isset($builder->scopes[$identifier])) {
                 continue;
             }
 
@@ -1484,7 +1500,7 @@ class Builder implements BuilderContract
         // scope so that we can properly group the added scope constraints in the
         // query as their own isolated nested where statement and avoid issues.
         $originalWhereCount = is_null($query->wheres)
-                    ? 0 : count($query->wheres);
+            ? 0 : count($query->wheres);
 
         $result = $scope(...$parameters) ?? $this;
 
@@ -1526,11 +1542,13 @@ class Builder implements BuilderContract
         $query->wheres = [];
 
         $this->groupWhereSliceForScope(
-            $query, array_slice($allWheres, 0, $originalWhereCount)
+            $query,
+            array_slice($allWheres, 0, $originalWhereCount)
         );
 
         $this->groupWhereSliceForScope(
-            $query, array_slice($allWheres, $originalWhereCount)
+            $query,
+            array_slice($allWheres, $originalWhereCount)
         );
     }
 
@@ -1548,9 +1566,10 @@ class Builder implements BuilderContract
         // Here we'll check if the given subset of where clauses contains any "or"
         // booleans and in this case create a nested where expression. That way
         // we don't add any unnecessary nesting thus keeping the query clean.
-        if ($whereBooleans->contains(fn ($logicalOperator) => str_contains($logicalOperator, 'or'))) {
+        if ($whereBooleans->contains(fn($logicalOperator) => str_contains($logicalOperator, 'or'))) {
             $query->wheres[] = $this->createNestedWhere(
-                $whereSlice, str_replace(' not', '', $whereBooleans->first())
+                $whereSlice,
+                str_replace(' not', '', $whereBooleans->first())
             );
         } else {
             $query->wheres = array_merge($query->wheres, $whereSlice);
@@ -1681,7 +1700,7 @@ class Builder implements BuilderContract
         // syntax, we shall loop over the nested relations and prepend each key of
         // this array while flattening into the traditional dot notation format.
         foreach ($relations as $key => $value) {
-            if (! is_string($key) || ! is_array($value)) {
+            if (!is_string($key) || !is_array($value)) {
                 continue;
             }
 
@@ -1704,9 +1723,9 @@ class Builder implements BuilderContract
                 [$key, $value] = $this->parseNameAndAttributeSelectionConstraint($value);
             }
 
-            $preparedRelationships[$prefix.$key] = $this->combineConstraints([
+            $preparedRelationships[$prefix . $key] = $this->combineConstraints([
                 $value,
-                $preparedRelationships[$prefix.$key] ?? static function () {
+                $preparedRelationships[$prefix . $key] ?? static function () {
                     //
                 },
             ]);
@@ -1742,9 +1761,12 @@ class Builder implements BuilderContract
     {
         return str_contains($name, ':')
             ? $this->createSelectWithConstraint($name)
-            : [$name, static function () {
-                //
-            }];
+            : [
+                $name,
+                static function () {
+                    //
+                }
+            ];
     }
 
     /**
@@ -1755,13 +1777,16 @@ class Builder implements BuilderContract
      */
     protected function createSelectWithConstraint($name)
     {
-        return [explode(':', $name)[0], static function ($query) use ($name) {
-            $query->select(array_map(static function ($column) use ($query) {
-                return $query instanceof BelongsToMany
+        return [
+            explode(':', $name)[0],
+            static function ($query) use ($name) {
+                $query->select(array_map(static function ($column) use ($query) {
+                    return $query instanceof BelongsToMany
                         ? $query->getRelated()->qualifyColumn($column)
                         : $column;
-            }, explode(',', explode(':', $name)[1])));
-        }];
+                }, explode(',', explode(':', $name)[1])));
+            }
+        ];
     }
 
     /**
@@ -1781,7 +1806,7 @@ class Builder implements BuilderContract
         foreach (explode('.', $name) as $segment) {
             $progress[] = $segment;
 
-            if (! isset($results[$last = implode('.', $progress)])) {
+            if (!isset($results[$last = implode('.', $progress)])) {
                 $results[$last] = static function () {
                     //
                 };
@@ -1802,7 +1827,7 @@ class Builder implements BuilderContract
      */
     public function withAttributes(Expression|array|string $attributes, $value = null)
     {
-        if (! is_array($attributes)) {
+        if (!is_array($attributes)) {
             $attributes = [$attributes => $value];
         }
 
@@ -2125,7 +2150,7 @@ class Builder implements BuilderContract
             return static::registerMixin($parameters[0], $parameters[1] ?? true);
         }
 
-        if (! static::hasGlobalMacro($method)) {
+        if (!static::hasGlobalMacro($method)) {
             static::throwBadMethodCallException($method);
         }
 
@@ -2152,7 +2177,7 @@ class Builder implements BuilderContract
         );
 
         foreach ($methods as $method) {
-            if ($replace || ! static::hasGlobalMacro($method->name)) {
+            if ($replace || !static::hasGlobalMacro($method->name)) {
                 static::macro($method->name, $method->invoke($mixin));
             }
         }
