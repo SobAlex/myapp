@@ -20,6 +20,10 @@
                     <x-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('admin.categories.index')">
                         {{ __('Categories') }}
                     </x-nav-link>
+
+                    <x-nav-link :href="route('admin.post.index')" :active="request()->routeIs('admin.post.index')">
+                        {{ __('Posts') }}
+                    </x-nav-link>
                     @endif
                 </div>
             </div>
@@ -100,6 +104,10 @@
             @auth
                 <x-responsive-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('admin.categories.index')">
                     {{ __('Categories') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('admin.post.index')" :active="request()->routeIs('admin.categories.index')">
+                    {{ __('Posts') }}
                 </x-responsive-nav-link>
             @endauth
 

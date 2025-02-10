@@ -32,10 +32,11 @@
         @endisset
 
 
-        <!-- Page Content -->
-        <main class="flex-auto">
+        <div class="flex-auto">
             {{ $slot }}
-        </main>
+        </div>
+
+
 
         <!-- Page Footer -->
         @isset($footer)

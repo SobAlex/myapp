@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             UserSeeder::class,
             CategorySeeder::class,
-            // PostSeeder::class,
+            PostSeeder::class,
             // TagSeeder::class,
             // NewsSeeder::class,
             // TaskSeeder::class,

@@ -13,6 +13,9 @@ class CategoryController extends Controller
     {
         $categories = Category::all();
 
+        $category = Category::find('2');
+        $categoryPosts = $category->posts;
+
         return view('admin.categories.index', compact('categories'));
     }
 

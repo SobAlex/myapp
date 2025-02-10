@@ -1,5 +1,4 @@
 <x-app-layout>
-
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Categories') }}
@@ -9,9 +8,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-
                     @if (count($categories) === 0)
                         <p class="px-7 mt-2 font-bold">Категорий нет</p>
                     @endif
@@ -33,12 +30,17 @@
                                 </th>
 
                                 <th scope="col" class="px-6 py-3">
+                                    Posts
+                                </th>
+
+                                <th scope="col" class="px-6 py-3">
                                     @can('only super-admins can see this section')
                                         Action
                                     @endcan
                                 </th>
                             </tr>
                         </thead>
+
                         <tbody>
                             @foreach ($categories as $category)
                                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
@@ -52,15 +54,25 @@
                                     </td>
 
                                     <td class="px-6 py-4">
-                                        @can('only super-admins can see this section')
-                                            <a href="{{ route('admin.categories.edit', $category) }}"
-                                                class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-green-800 hover:bg-green-800 mb-5">Edit</a>
+                                        Список постов с данной категорией
+                                    </td>
 
-                                            <form method="POST" action="{{ route('admin.categories.delete', $category) }}">
-                                                @csrf
-                                                @method('delete')
-                                                <button type="submit" class="text-red-700">Delete</button>
-                                            </form>
+                                    <td class="px-6 py-4">
+                                        @can('only super-admins can see this section')
+                                            <div class="flex">
+
+                                                <a href="{{ route('admin.categories.edit', $category) }}"
+                                                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-green-800 hover:bg-green-800 mb-5">Edit</a>
+
+                                                <form method="POST" action="{{ route('admin.categories.delete', $category) }}">
+                                                    @csrf
+                                                    @method('delete')
+
+                                                    <x-danger-button class="ml-2">
+                                                        {{ __('Delete') }}
+                                                    </x-danger-button>
+                                                </form>
+                                            </div>
                                         @endcan
                                     </td>
                                 </tr>
@@ -72,4 +84,9 @@
         </div>
     </div>
 
+    <x-slot name="footer">
+        <div class="py-16 text-center text-sm text-black dark:text-white/70">
+            Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})
+        </div>
+    </x-slot>
 </x-app-layout>
