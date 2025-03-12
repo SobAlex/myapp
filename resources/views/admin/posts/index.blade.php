@@ -26,6 +26,10 @@
                                 </th>
 
                                 <th scope="col" class="px-6 py-3">
+                                    Avatar
+                                </th>
+
+                                <th scope="col" class="px-6 py-3">
                                     Title
                                 </th>
 
@@ -53,6 +57,15 @@
                                             class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                             {{ $post->id }}
                                         </th>
+
+                                        <td class="px-6 py-4">
+                                            @foreach ($post->images as $img)
+                                                <div class="w-32 h-32">
+                                                    <img class="w-full h-full rounded-2xl" src="{{ Vite::asset($img->preview_path) }}"
+                                                        alt="{{ $img->preview_path }}">
+                                                </div>
+                                            @endforeach
+                                        </td>
 
                                         <td class="px-6 py-4">
                                             {{ $post->title }}

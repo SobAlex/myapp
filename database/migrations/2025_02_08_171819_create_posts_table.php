@@ -14,14 +14,14 @@ return new class extends Migration {
             $table->id();
             $table->unsignedInteger('owner_id');
             $table->unsignedInteger('category_id');
-            $table->string('slug')->unique();
+            $table->string('slug');
             $table->string('title');
             $table->text('content');
             $table->boolean('isPublick')->default('1');
             $table->timestamps();
             $table->softDeletes();
-            $table->foreign('owner_id')->on('users')->references('id');
-            $table->foreign('category_id')->on('categories')->references('id');
+            $table->foreign('owner_id')->on('users')->references('id')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
         });
     }
 

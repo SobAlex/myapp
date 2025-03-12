@@ -12,8 +12,7 @@
                     <div
                         class="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
 
-                        <img class="rounded-t-lg max-w-sm" src={{ Vite::asset('resources/images/fon_dost.jpg') }}
-                            alt="Фото питера" />
+                        <img class="w-96" src="{{ Vite::asset($postDetailImgPath) }}" alt="{{ $postDetailImgPath }}">
 
                         <div class="p-5">
                             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">

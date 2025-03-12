@@ -1,11 +1,27 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-Bzu10ED2.css",
+    "file": "assets/app-CKReBMjP.css",
     "src": "resources/css/app.css",
     "isEntry": true
   },
+  "resources/images/1740670498.jpg": {
+    "file": "assets/1740670498-a0bJUyMj.jpg",
+    "src": "resources/images/1740670498.jpg"
+  },
+  "resources/images/1740671352.jpg": {
+    "file": "assets/1740671352-JBDxoIo9.jpg",
+    "src": "resources/images/1740671352.jpg"
+  },
+  "resources/images/1740680402.jpg": {
+    "file": "assets/1740680402-DTZP2SgM.jpg",
+    "src": "resources/images/1740680402.jpg"
+  },
+  "resources/images/fon_dost.jpg": {
+    "file": "assets/fon_dost-Z8TF3OVo.jpg",
+    "src": "resources/images/fon_dost.jpg"
+  },
   "resources/js/app.js": {
-    "file": "assets/app-CvSG40sc.js",
+    "file": "assets/app-Ch_oDI1E.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true
