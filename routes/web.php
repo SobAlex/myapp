@@ -50,6 +50,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('{path}', 'Controller@path')->where('path', '[a-zA-Z0-9\-/_]+')->name('path');
-
 require __DIR__ . '/auth.php';
